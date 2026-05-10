@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Build Masks Data
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.8.1\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19801\nNode;AmplifyShaderEditor.RangedFloatNode;26;-896,-384;Half;False;Constant;_Float0;Float
+    0;0;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;31;-896,-192;Half;False;Constant;_Float5;Float
+    0;0;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;27;-896,-320;Half;False;Constant;_Float1;Float
+    0;0;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;45;-896,-256;Half;False;Constant;_Float3;Float
+    0;0;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;14;-640,-384;Inherit;False;Mask
+    0;4;0;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.FunctionInput;4;-640,-320;Inherit;False;Mask
+    1;4;1;False;1;0;FLOAT4;1,1,1,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.FunctionInput;44;-640,-256;Inherit;False;Mask
+    2;4;2;False;1;0;FLOAT4;1,1,1,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.FunctionInput;5;-640,-192;Inherit;False;Mask
+    3;4;3;False;1;0;FLOAT4;0.5,0.5,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.CustomExpressionNode;3;-256,-384;Inherit;False;Data.Mask0
+    = In_Mask0@$Data.Mask1 = In_Mask1@$Data.Mask2 = In_Mask2@$Data.Mask3 = In_Mask3@$$;1;Call;5;True;Data;OBJECT;(TVEMaskData)0;Out;TVEMasksData;Half;False;True;In_Mask0;FLOAT4;0,0,0,0;In;;Half;False;True;In_Mask1;FLOAT4;0,0,0,0;In;;Half;False;True;In_Mask2;FLOAT4;0,0,0,0;In;;Half;False;True;In_Mask3;FLOAT4;0,0,0,0;In;;Half;False;CompData;False;False;0;;False;6;0;FLOAT;0;False;1;OBJECT;(TVEMaskData)0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;2;FLOAT;0;OBJECT;2\nNode;AmplifyShaderEditor.FunctionOutput;0;128,-384;Inherit;False;True;-1;Data;0;False;1;0;OBJECT;0;False;1;OBJECT;0\nWireConnection;14;0;26;0\nWireConnection;4;0;27;0\nWireConnection;44;0;45;0\nWireConnection;5;0;31;0\nWireConnection;3;2;14;0\nWireConnection;3;3;4;0\nWireConnection;3;4;44;0\nWireConnection;3;5;5;0\nWireConnection;0;0;3;2\nASEEND*/\n//CHKSM=7A36D21C9D6ACAB48893BD43E2408EC896BC95CC"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_headerStyle: 2
+  m_headerColor: {r: 0.5708575, g: 0.25098038, b: 1, a: 1}
+  m_customNodeCategory: The Visual Engine
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 
