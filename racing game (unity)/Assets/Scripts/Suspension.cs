@@ -194,6 +194,29 @@ public class Suspension : MonoBehaviour
         } 
     }
 
+    // reset runtime suspension state
+    public void ResetForEpisode()
+    {
+        springLength = restLength;
+        lastLength = restLength;
+        springForce = 0f;
+        damperForce = 0f;
+        springVelocity = 0f;
+        suspensionForce = Vector3.zero;
+        hitPoint = Vector3.zero;
+        hitNormal = Vector3.up;
+        wheelAngle = 0f;
+        targetWheelAngle = 0f;
+        steeringSpeedMulti = 1f;
+        grip = 0f;
+        longSlip = 0f;
+        isGrounded = false;
+        isOnTerrain = false;
+        lastSkid = -1;
+        tireHeat = 0f;
+        tireAudioVolume = 0f;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

@@ -2,16 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 
 public class Car : MonoBehaviour
 {
+    public enum InputMode
+    {
+        Player,
+        ReinforcementLearning
+    }
+
     PlayerControls controls;
     private Rigidbody rb;
     public Engine engine;
+
+    [Header("Control Source")]
+    [SerializeField] private InputMode inputMode = InputMode.Player;
+    private float rlSteering;
+    private float rlThrottle;
+    private float rlBrake;
 
     [Header("Suspension")]
     public Suspension[] suspensions;
@@ -58,6 +69,7 @@ public class Car : MonoBehaviour
     void Awake()
     {
         controls = new PlayerControls();
+        rb = GetComponent<Rigidbody>();
     }
 
     void OnEnable()
@@ -70,11 +82,6 @@ public class Car : MonoBehaviour
         controls.Gameplay.Disable();
     }
 
-    void Start()
-    {
-        rb = transform.GetComponent<Rigidbody>();
-    }
-
     void Update()
     {
         Inputs();
@@ -84,6 +91,15 @@ public class Car : MonoBehaviour
 
     private void Inputs()
     {
+        if (inputMode == InputMode.ReinforcementLearning)
+        {
+            steerInput = rlSteering;
+            throttleInput = rlThrottle;
+            brakeInput = rlBrake;
+            ebrakeInput = false;
+            return;
+        }
+
         // old input system
         // steerInput = Input.GetAxis("Horizontal");
         // throttleInput = Input.GetAxis("Vertical");
@@ -104,6 +120,58 @@ public class Car : MonoBehaviour
         ebrakeInput = controls.Gameplay.Ebrake.ReadValue<float>() == 1f ? true : false;
     }
 
+    // use RL inputs instead of player controls
+    public void SetRLAction(float steering, float throttle, float brake)
+    {
+        inputMode = InputMode.ReinforcementLearning;
+        rlSteering = Mathf.Clamp(steering, -1f, 1f);
+        rlThrottle = Mathf.Clamp01(throttle);
+        rlBrake = Mathf.Clamp01(brake);
+
+        if (engine != null)
+            engine.SetRLThrottle(rlThrottle);
+    }
+
+    // use player controls
+    public void UsePlayerInput()
+    {
+        inputMode = InputMode.Player;
+        rlSteering = 0f;
+        rlThrottle = 0f;
+        rlBrake = 0f;
+
+        if (engine != null)
+            engine.UsePlayerInput();
+    }
+
+    public InputMode CurrentInputMode => inputMode;
+    public Rigidbody Rigidbody => rb;
+
+    // reset runtime car state
+    public void ResetForEpisode()
+    {
+        steerInput = 0f;
+        throttleInput = 0f;
+        brakeInput = 0f;
+        ebrakeInput = false;
+        rlSteering = 0f;
+        rlThrottle = 0f;
+        rlBrake = 0f;
+        moveDir = 0f;
+        speed = 0f;
+        speedMs = 0f;
+        lastVelocity = Vector3.zero;
+        acceleration = Vector3.zero;
+        isDrifting = false;
+        isRearGrounded = false;
+
+        foreach (Suspension suspension in suspensions)
+            suspension.ResetForEpisode();
+
+        if (engine != null)
+            engine.ResetForEpisode();
+    }
+
     private void BrakeFX()
     {
         bool targetState;
@@ -122,6 +190,13 @@ public class Car : MonoBehaviour
 
         if (isBrakeTrailing == targetState)
         {
+            return;
+        }
+
+        // Training scenes may omit purely visual brake trails.
+        if (brakeTrails == null)
+        {
+            isBrakeTrailing = targetState;
             return;
         }
 
@@ -224,7 +299,6 @@ public class Car : MonoBehaviour
             if (Mathf.Abs(yaw) > 1f)
                 adjustedDriftThreshold *= 0.5f;
 
-            Debug.Log(driftAngle + " /// " + adjustedDriftThreshold);
             if (driftAngle > adjustedDriftThreshold) // if drifting
             {
                 float driftFactor = Mathf.Clamp01(driftAngle * 3.6f - driftThreshold);

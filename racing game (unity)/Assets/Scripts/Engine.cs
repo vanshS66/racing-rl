@@ -12,6 +12,8 @@ public class Engine : MonoBehaviour
     private Car carScript;
     private StudioEventEmitter emitter;
     private float wheelRadius;
+    private bool useRLThrottle;
+    private float rlThrottle;
 
     [Header("RPMs")]
     public float throttleInput;
@@ -63,6 +65,12 @@ public class Engine : MonoBehaviour
 
     private void Controls()
     {
+        if (useRLThrottle)
+        {
+            throttleInput = rlThrottle;
+            return;
+        }
+
         float targetThrottle = controls.Gameplay.Throttle.ReadValue<float>();
         throttleInput = Mathf.Lerp(throttleInput, targetThrottle, 3f * Time.deltaTime);
 
@@ -71,6 +79,35 @@ public class Engine : MonoBehaviour
         {
             ReverseToggle();
         }
+    }
+
+    // use throttle from RL
+    public void SetRLThrottle(float throttle)
+    {
+        useRLThrottle = true;
+        rlThrottle = Mathf.Clamp01(throttle);
+    }
+
+    // use throttle from player controls
+    public void UsePlayerInput()
+    {
+        useRLThrottle = false;
+        rlThrottle = 0f;
+    }
+
+    // reset runtime drivetrain state
+    public void ResetForEpisode()
+    {
+        StopAllCoroutines();
+        isShifting = false;
+        isReversing = false;
+        gearIndex = 0;
+        currentGearRatio = gearRatios != null && gearRatios.Length > 0 ? gearRatios[0] : 0f;
+        currentRPM = minRPM;
+        engineTorque = 0f;
+        wheelTorque = 0f;
+        throttleInput = 0f;
+        rlThrottle = 0f;
     }
 
     private void ReverseToggle()
@@ -144,7 +181,6 @@ public class Engine : MonoBehaviour
         UpdateTorque();
         Audio();
 
-        Debug.Log("RPM: " + currentRPM);
     }
 
     private void Audio()
@@ -177,12 +213,10 @@ public class Engine : MonoBehaviour
         float realRPM = (carScript.speedMs / wheelRadius) * currentGearRatio * diffRatio * (60f / (2f * (float)Math.PI));
         if (realRPM < minRPM)
             realRPM = minRPM;
-        Debug.Log("REALRPM: " + realRPM);
 
         // this is basically for when you regain grip and your rpm is crazy high
         if (realRPM > 2000f && rpm > realRPM + 500f && rearGrip == 1f)
         {
-            Debug.Log(rpm + " --> " + Mathf.Lerp(rpm, realRPM, 0.5f * Time.deltaTime));
             rpm = Mathf.Lerp(rpm, realRPM, 0.5f * Time.deltaTime);
         }
 
@@ -256,7 +290,6 @@ public class Engine : MonoBehaviour
                 }
             }
 
-        Debug.Log("WHEEL/DRIVE TORQUE: " + wheelTorque);
     }
 
     public float GetLongitudinalSlip()
@@ -298,7 +331,6 @@ public class Engine : MonoBehaviour
         maxSpeed *= 2f * (float)Math.PI * wheelRadius / 60f;
         maxSpeed *= 3.6f; // to km/h
 
-        Debug.Log("MAX SPEED: " + maxSpeed);
         return maxSpeed;
     }
 
@@ -316,7 +348,6 @@ public class Engine : MonoBehaviour
             minSpeed *= 2f;
         }
 
-        Debug.Log("MIN SPEED: " + minSpeed);
         return minSpeed;
     }
 
