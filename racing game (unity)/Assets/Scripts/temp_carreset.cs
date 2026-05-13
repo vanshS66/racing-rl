@@ -8,6 +8,19 @@ public class temp_carreset : MonoBehaviour
     public Vector3 storedPos;
     public Quaternion storedRot;
     private bool isKinematic = true;
+    private RacingEnvironmentController environment;
+
+    void Awake()
+    {
+        if (car == null)
+        {
+            Debug.LogError("temp_carreset requires the active training car.", this);
+            enabled = false;
+            return;
+        }
+
+    }
+
     void Start()
     {
         storedPos = car.transform.position;
@@ -20,14 +33,12 @@ public class temp_carreset : MonoBehaviour
         {
             storedPos = car.transform.position;
             storedRot = car.transform.rotation;
+            environment.SetRuntimeSpawnPose(storedPos, storedRot);
         }
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            car.GetComponent<Rigidbody>().isKinematic = true;
-            car.transform.position = storedPos;
-            car.transform.rotation = storedRot;
-            car.GetComponent<Rigidbody>().isKinematic = false;
+            environment.ResetEpisode(enableRLControl: false);
         }
 
         if (Input.GetKeyDown(KeyCode.B))
