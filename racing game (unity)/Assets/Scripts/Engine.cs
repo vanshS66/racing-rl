@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using FMODUnity;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Jobs;
 
 public class Engine : MonoBehaviour
 {
@@ -14,6 +10,7 @@ public class Engine : MonoBehaviour
     private float wheelRadius;
     private bool useRLThrottle;
     private float rlThrottle;
+    private bool enableAudio = true;
 
     [Header("RPMs")]
     public float throttleInput;
@@ -93,6 +90,12 @@ public class Engine : MonoBehaviour
     {
         useRLThrottle = false;
         rlThrottle = 0f;
+    }
+
+    // turn engine audio on or off for training
+    public void SetTrainingMode(bool trainingMode)
+    {
+        enableAudio = !trainingMode;
     }
 
     // reset runtime drivetrain state
@@ -185,7 +188,8 @@ public class Engine : MonoBehaviour
 
     private void Audio()
     {
-        emitter.SetParameter("RPM", currentRPM);
+        if (enableAudio && emitter != null)
+            emitter.SetParameter("RPM", currentRPM);
     }
 
     private void UpdateRPM()
@@ -210,7 +214,7 @@ public class Engine : MonoBehaviour
             rpm -= rpmDecreaseRate * slipMulti * Time.fixedDeltaTime;
         }
 
-        float realRPM = (carScript.speedMs / wheelRadius) * currentGearRatio * diffRatio * (60f / (2f * (float)Math.PI));
+        float realRPM = (carScript.speedMs / wheelRadius) * currentGearRatio * diffRatio * (60f / (2f * Mathf.PI));
         if (realRPM < minRPM)
             realRPM = minRPM;
 
@@ -298,7 +302,7 @@ public class Engine : MonoBehaviour
         Return rear tire slip in the forward-backward (z) direction
         */
 
-        float realRPM = (carScript.speedMs / wheelRadius) * currentGearRatio * diffRatio * (60f / (2f * (float)Math.PI));
+        float realRPM = (carScript.speedMs / wheelRadius) * currentGearRatio * diffRatio * (60f / (2f * Mathf.PI));
         if (realRPM < minRPM)
             realRPM = minRPM;
             
@@ -328,7 +332,7 @@ public class Engine : MonoBehaviour
         */
 
         float maxSpeed = rpm / (gearRatio * diffRatio);
-        maxSpeed *= 2f * (float)Math.PI * wheelRadius / 60f;
+        maxSpeed *= 2f * Mathf.PI * wheelRadius / 60f;
         maxSpeed *= 3.6f; // to km/h
 
         return maxSpeed;

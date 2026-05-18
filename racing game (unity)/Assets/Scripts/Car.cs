@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 
 public class Car : MonoBehaviour
@@ -129,7 +124,13 @@ public class Car : MonoBehaviour
         rlBrake = Mathf.Clamp01(brake);
 
         if (engine != null)
+        {
             engine.SetRLThrottle(rlThrottle);
+            engine.SetTrainingMode(true);
+        }
+
+        foreach (Suspension suspension in suspensions)
+            suspension.SetTrainingMode(true);
     }
 
     // use player controls
@@ -141,7 +142,13 @@ public class Car : MonoBehaviour
         rlBrake = 0f;
 
         if (engine != null)
+        {
             engine.UsePlayerInput();
+            engine.SetTrainingMode(false);
+        }
+
+        foreach (Suspension suspension in suspensions)
+            suspension.SetTrainingMode(false);
     }
 
     public InputMode CurrentInputMode => inputMode;

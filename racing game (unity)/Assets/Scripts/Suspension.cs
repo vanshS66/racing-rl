@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using FMODUnity;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Suspension : MonoBehaviour
@@ -60,15 +55,19 @@ public class Suspension : MonoBehaviour
     public bool isOnTerrain { get; private set; }
     private Car carScript;
     private float lastFixedUpdateTime;
+    private bool enableEffects = true;
 
     void Start()
     {
         rb = transform.root.GetComponent<Rigidbody>();
-        wheelObj = Instantiate(wheelPrefab, transform).transform;
+        if (wheelPrefab != null)
+            wheelObj = Instantiate(wheelPrefab, transform).transform;
         carScript = transform.root.GetComponent<Car>();
         skidmarkScript = Skidmarks.Instance;
-        smokeParticles = Instantiate(smokeParticlesPrefab, transform).GetComponent<ParticleSystem>();
-        grassParticles = Instantiate(grassParticlesPrefab, transform).GetComponent<ParticleSystem>();
+        if (smokeParticlesPrefab != null)
+            smokeParticles = Instantiate(smokeParticlesPrefab, transform).GetComponent<ParticleSystem>();
+        if (grassParticlesPrefab != null)
+            grassParticles = Instantiate(grassParticlesPrefab, transform).GetComponent<ParticleSystem>();
         tireEmitter = GetComponent<FMODUnity.StudioEventEmitter>();
 
         minLength = restLength - springTravel;
@@ -87,8 +86,10 @@ public class Suspension : MonoBehaviour
         }
 
         // move wheel with suspension
-        wheelObj.position = transform.position + -1 * transform.up * springLength;
-        smokeParticles.transform.position = wheelObj.position - new Vector3(0, wheelRadius, 0);
+        if (wheelObj != null)
+            wheelObj.position = transform.position + -1 * transform.up * springLength;
+        if (smokeParticles != null && wheelObj != null)
+            smokeParticles.transform.position = wheelObj.position - new Vector3(0, wheelRadius, 0);
 
         if (!isGrounded)
         {
@@ -105,7 +106,8 @@ public class Suspension : MonoBehaviour
         float dirMulti = carScript.moveDir; // reverse spin dir if moving backward
         if (!isLeftWheel)
             dirMulti *= -1f; // right wheels turn proper dir
-        wheelObj.Rotate(0, 0, (carScript.speed + slipRotateSpeed) * wheelRotationMulti * dirMulti * Time.deltaTime, Space.Self);
+        if (wheelObj != null)
+            wheelObj.Rotate(0, 0, (carScript.speed + slipRotateSpeed) * wheelRotationMulti * dirMulti * Time.deltaTime, Space.Self);
         // TODO: use math to calculate actual wheel rotate speed when full gripped and have some multiplier when drifting/slipping
     }
 
@@ -139,6 +141,9 @@ public class Suspension : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!enableEffects || smokeParticles == null || grassParticles == null)
+            return;
+
         // vfx and sfx
         
         var smokeEmission = smokeParticles.emission;
@@ -159,7 +164,8 @@ public class Suspension : MonoBehaviour
             tireAudioVolume *= 0.1f * Time.deltaTime;
             if (grip == 0f)
                 tireAudioVolume = 0f;
-            tireEmitter.SetParameter("tire volume", tireAudioVolume);
+            if (tireEmitter != null)
+                tireEmitter.SetParameter("tire volume", tireAudioVolume);
             return;
         }
 
@@ -176,10 +182,11 @@ public class Suspension : MonoBehaviour
         // tire screech
         float fxMulti = Mathf.Max(1 - grip, longSlip * 2f);
         tireAudioVolume = fxMulti * 0.4f;
-        tireEmitter.SetParameter("tire volume", tireAudioVolume);
+        if (tireEmitter != null)
+            tireEmitter.SetParameter("tire volume", tireAudioVolume);
 
         // skidmarks
-        if (grip < 1f) // dont skid if only long slipping
+        if (grip < 1f && skidmarkScript != null) // dont skid if only long slipping
         {
             lastSkid = skidmarkScript.AddSkidMark(hitPoint + rb.velocity * Time.fixedDeltaTime, hitNormal, 1f, lastSkid);
         }
@@ -215,6 +222,31 @@ public class Suspension : MonoBehaviour
         lastSkid = -1;
         tireHeat = 0f;
         tireAudioVolume = 0f;
+    }
+
+    // turn tire effects on or off for training
+    public void SetTrainingMode(bool trainingMode)
+    {
+        if (enableEffects == !trainingMode)
+            return;
+
+        enableEffects = !trainingMode;
+        tireAudioVolume = 0f;
+
+        if (tireEmitter != null)
+            tireEmitter.SetParameter("tire volume", 0f);
+
+        if (smokeParticles != null)
+        {
+            smokeParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            smokeParticles.gameObject.SetActive(enableEffects);
+        }
+
+        if (grassParticles != null)
+        {
+            grassParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            grassParticles.gameObject.SetActive(enableEffects);
+        }
     }
 
     private void OnDrawGizmos()
