@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package racingrl.v1;
+
+option csharp_namespace = "RacingRl.V1";
+
+service RacingEnvironment {
+  rpc Health(HealthRequest) returns (HealthResponse);
+  rpc Reset(ResetRequest) returns (ResetResponse);
+  rpc Step(StepRequest) returns (StepResponse);
+}
+
+message Observation {
+  // fixed order from RacingEnvironmentController.BuildObservation
+  repeated float ray_distances = 1;
+  float forward_speed = 2;
+  float lateral_speed = 3;
+  float slip_angle = 4;
+  float yaw_rate = 5;
+  float progress = 6;
+}
+
+message Action {
+  // steering [-1, 1], throttle [0, 1], brake [0, 1]
+  float steering = 1;
+  float throttle = 2;
+  float brake = 3;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string service_version = 1;
+  uint32 observation_size = 2;
+  uint32 action_size = 3;
+}
+
+message ResetRequest {
+  // zero uses the current scene setup without seeded randomization
+  uint64 seed = 1;
+}
+
+message ResetResponse {
+  Observation observation = 1;
+  map<string, string> info = 2;
+}
+
+message StepRequest {
+  Action action = 1;
+}
+
+message StepResponse {
+  Observation observation = 1;
+  float reward = 2;
+  bool terminated = 3;
+  bool truncated = 4;
+  map<string, string> info = 5;
+}
