@@ -16,6 +16,17 @@ Generate Python bindings:
 py -m grpc_tools.protoc --proto_path=proto --python_out=python/generated --grpc_python_out=python/generated proto/racing_rl.proto
 ```
 
+## Unity C# generation
+
+The Unity spike uses the pinned `Grpc.Tools` package declared in `tools/RacingRlCodegen`. Restore it once, then regenerate the C# files after changing the schema:
+
+```powershell
+dotnet restore tools/RacingRlCodegen/RacingRlCodegen.csproj
+.\tools\generate_unity_proto.ps1
+```
+
+The generated files belong in `racing game (unity)/Assets/Scripts/RL/Generated`. The native runtime is deliberately limited to the Windows x64 Editor/Standalone spike; see `Assets/Plugins/Grpc/README.md`.
+
 Check the generated imports:
 
 ```powershell
