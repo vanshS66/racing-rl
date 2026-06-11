@@ -4,7 +4,8 @@ This folder contains the managed runtime for the Windows x64 Unity training spik
 
 - `Grpc.Core.dll` and `Grpc.Core.Api.dll`: `Grpc.Core` 2.46.6
 - `Google.Protobuf.dll`: 3.21.12
-- `../x86_64/grpc_csharp_ext.x64.dll`: native `Grpc.Core` 2.46.6 runtime
+- `System.Runtime.CompilerServices.Unsafe.dll`: 4.5.2
+- `../grpc_csharp_ext.dll`: native `Grpc.Core` 2.46.6 runtime
 
 The server listens only on `127.0.0.1:50051`. It is for the Unity Editor and Windows x64 standalone builds. Do not use it for IL2CPP, WebGL, mobile, or a network-exposed production server.
 
