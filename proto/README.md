@@ -38,10 +38,17 @@ py -c "import sys; sys.path.insert(0, 'python/generated'); import racing_rl_pb2;
 1. Python sends `ResetRequest`.
 2. Unity resets the car and returns the first `Observation`.
 3. Python sends one `Action` in `StepRequest`.
-4. Unity holds that action for its configured fixed-physics decision interval.
+4. Unity applies that action, advances one fixed-physics tick, and then samples the result.
 5. Unity returns the post-step observation, reward, terminal state, and info.
 
 `Reset` and `Step` are unary calls on purpose. They make one action map to one completed simulation transition. Streaming is not needed until profiling shows call overhead matters.
+
+With Unity in Play mode, use this transport smoke test before Gymnasium exists:
+
+```powershell
+py .\python\health_check.py
+py .\python\bridge_smoke_test.py
+```
 
 ## Observation order
 
