@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Tools" Version="2.46.6" PrivateAssets="all" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../racing game (unity)/Assets/Scripts/RL/Generated/RacingRl.cs" Link="Generated/RacingRl.cs" />
+    <Compile Include="../../racing game (unity)/Assets/Scripts/RL/Generated/RacingRlGrpc.cs" Link="Generated/RacingRlGrpc.cs" />
+  </ItemGroup>
+</Project>
