@@ -14,6 +14,6 @@ Generated Unity data, IDE files, training outputs, and unrelated test or vendor 
 
 ## Planned RL workflow
 
-1. Add a Unity agent/environment bridge under `racing game (unity)/Assets/Scripts/`.
+1. Add a Unity environment bridge under `racing game (unity)/Assets/Scripts/`.
 2. Add the Gymnasium environment and training entry points under `python/`.
-3. Store reproducible dependency declarations and evaluation instructions with the training code.
+3. Store dependency declarations and instructions with the training code.
