@@ -1,2 +1,4 @@
 grpcio==1.84.0
 grpcio-tools==1.84.0
+gymnasium==1.1.1
+numpy==1.26.4
