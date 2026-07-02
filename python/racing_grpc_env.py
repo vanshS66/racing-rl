@@ -21,7 +21,13 @@ class RacingGrpcEnv(gym.Env):
         self.channel = grpc.insecure_channel(address)
         self.stub = racing_rl_pb2_grpc.RacingEnvironmentStub(self.channel)
 
-        health = self.stub.Health(racing_rl_pb2.HealthRequest(), timeout=self.timeout_seconds)
+        try:
+            health = self.stub.Health(racing_rl_pb2.HealthRequest(), timeout=self.timeout_seconds)
+        except grpc.RpcError as error:
+            self.close()
+            raise ConnectionError(
+                "Could not reach the Unity gRPC server at " + address + ". Open main_training and enter Play mode first."
+            ) from error
         if health.action_size != 3:
             self.close()
             raise RuntimeError("Unity reported an unsupported action size: " + str(health.action_size))
