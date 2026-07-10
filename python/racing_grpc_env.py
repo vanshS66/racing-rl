@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+from time import perf_counter
 
 import grpc
 import gymnasium as gym
@@ -35,6 +36,7 @@ class RacingGrpcEnv(gym.Env):
             self.close()
             raise RuntimeError("Unity reported an invalid observation size: " + str(health.observation_size))
 
+        self.service_version = health.service_version
         ray_count = health.observation_size - 5
         observation_low = np.array([0.0] * ray_count + [-50.0, -50.0, -np.pi, -20.0, 0.0], dtype=np.float32)
         observation_high = np.array([1.0] * ray_count + [50.0, 50.0, np.pi, 20.0, 1.0], dtype=np.float32)
@@ -66,13 +68,16 @@ class RacingGrpcEnv(gym.Env):
                 brake=float(action[2]),
             )
         )
+        started_at = perf_counter()
         response = self.stub.Step(request, timeout=self.timeout_seconds)
+        info = dict(response.info)
+        info["rpc_seconds"] = perf_counter() - started_at
         return (
             self._observation_from_proto(response.observation),
             float(response.reward),
             bool(response.terminated),
             bool(response.truncated),
-            dict(response.info),
+            info,
         )
 
     def close(self):
