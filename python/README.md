@@ -8,10 +8,10 @@ Start Unity with `main_training` in Play mode before running any Python bridge o
 py .\python\check_gym_env.py
 ```
 
-## PPO smoke run
+## PPO validation run
 
 ```powershell
-py .\python\train_ppo.py --timesteps 2048 --run-name ppo_smoke
+py .\python\train_ppo.py --timesteps 2048 --run-name ppo_check
 ```
 
 The baseline uses one `DummyVecEnv` because one Unity process serves one serialized car. Its model and TensorBoard files are saved under `runs/<run-name>/`.
