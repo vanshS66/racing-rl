@@ -731,7 +731,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: c2ad1e8f35b0d1f46bf99ed78b31387f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3041441000460885727, guid: 46602921723f13141a6d03d21bf4edea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1029092516}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -3506764988723376238, guid: 46602921723f13141a6d03d21bf4edea, type: 3}
       insertIndex: -1
@@ -921,6 +924,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4163724365912177184, guid: 46602921723f13141a6d03d21bf4edea, type: 3}
+--- !u!4 &757656489 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3041441000460885727, guid: 46602921723f13141a6d03d21bf4edea, type: 3}
+  m_PrefabInstance: {fileID: 452909131}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &880360787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,6 +1207,60 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1029092515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1029092516}
+  - component: {fileID: 1029092517}
+  m_Layer: 20
+  m_Name: RoadSensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1029092516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029092515}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 757656489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1029092517
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029092515}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4163724365912177184, guid: 89930cf266567904a914362707353ab4, type: 3}
 --- !u!1 &1032099577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1904,29 +1966,22 @@ MonoBehaviour:
   car: {fileID: 1695330004}
   spawnPoint: {fileID: 1521158832}
   raySensors:
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: -70
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: -40
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: -15
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: 0
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: 15
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: 40
-  - localOrigin: {x: 0, y: 0.5, z: 0.6}
-    yawDegrees: 70
-  rayLength: 30
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  - localOrigin: {x: -3.5, y: 2, z: 0.6}
+  - localOrigin: {x: -2.25, y: 2, z: 0.6}
+  - localOrigin: {x: -1, y: 2, z: 0.6}
+  - localOrigin: {x: 0, y: 2, z: 0.6}
+  - localOrigin: {x: 1, y: 2, z: 0.6}
+  - localOrigin: {x: 2.25, y: 2, z: 0.6}
+  - localOrigin: {x: 3.5, y: 2, z: 0.6}
+  rayLength: 3
   maxDecisionSteps: 1000
   minimumWorldY: -5
   maximumUprightAngle: 75
+  stalledSpeedThreshold: 0.5
+  maxStalledDecisionSteps: 150
   checkpointCount: 12
   checkpointReward: 1
+  checkpointDistanceReward: 0.05
   lapCompletionReward: 10
   stepPenalty: -0.001
   failurePenalty: -5

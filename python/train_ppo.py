@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import gymnasium
+import numpy as np
 import stable_baselines3
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
@@ -18,16 +19,18 @@ class BridgeMetricsCallback(BaseCallback):
     def _on_step(self):
         observation = self.locals["new_obs"][0]
         action = self.locals["actions"][0]
-        info = self.locals["infos"][0]
+        bounded_action = np.clip(action, self.training_env.action_space.low, self.training_env.action_space.high)
 
-        self.logger.record_mean("bridge/forward_speed", float(observation[-5]))
-        self.logger.record_mean("bridge/lateral_speed", float(observation[-4]))
+        self.logger.record_mean("bridge/forward_speed", float(observation[-7]))
+        self.logger.record_mean("bridge/lateral_speed", float(observation[-6]))
         self.logger.record_mean("bridge/progress", float(observation[-1]))
-        self.logger.record_mean("bridge/min_ray", float(min(observation[:-5])))
-        self.logger.record_mean("bridge/rpc_seconds", float(info["rpc_seconds"]))
-        self.logger.record_mean("bridge/steering", float(action[0]))
-        self.logger.record_mean("bridge/throttle", float(action[1]))
-        self.logger.record_mean("bridge/brake", float(action[2]))
+        self.logger.record_mean("bridge/min_ray", float(min(observation[:-7])))
+        self.logger.record_mean("bridge/target_lateral", float(observation[-3]))
+        self.logger.record_mean("bridge/target_forward", float(observation[-2]))
+        self.logger.record_mean("bridge/rpc_seconds", float(self.training_env.get_attr("last_rpc_seconds")[0]))
+        self.logger.record_mean("bridge/steering", float(bounded_action[0]))
+        self.logger.record_mean("bridge/throttle", float(bounded_action[1]))
+        self.logger.record_mean("bridge/brake", float(bounded_action[2]))
         self.logger.record("bridge/physics_ticks_per_rpc", 1)
         return True
 
@@ -70,7 +73,7 @@ def main():
         }
         (run_root / "run_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
 
-        env = DummyVecEnv([lambda: Monitor(base_env, filename=str(run_root / "monitor"), info_keywords=("rpc_seconds",))])
+        env = DummyVecEnv([lambda: Monitor(base_env, filename=str(run_root / "monitor"))])
         checkpoint_callback = CheckpointCallback(
             save_freq=10_000,
             save_path=str(checkpoint_root),

@@ -55,19 +55,21 @@ py .\python\bridge_smoke_test.py
 `Observation` is flattened for Gymnasium as:
 
 ```text
-[ray_distances..., forward_speed, lateral_speed, slip_angle, yaw_rate, progress]
+[ray_distances..., forward_speed, lateral_speed, slip_angle, yaw_rate, target_lateral, target_forward, progress]
 ```
 
 | Field | Unity source | Range / unit |
 | --- | --- | --- |
-| `ray_distances` | `RacingEnvironmentController.BuildObservation` | 7 values by default, normalized `[0, 1]` |
+| `ray_distances` | `RacingEnvironmentController.BuildObservation` | 7 road-presence probes; `1` is road below the probe and `0` is no road |
 | `forward_speed` | local Rigidbody Z velocity | `[-50, 50]` m/s |
 | `lateral_speed` | local Rigidbody X velocity | `[-50, 50]` m/s |
 | `slip_angle` | `atan2(localVelocity.x, localVelocity.z)` | `[-pi, pi]` radians |
 | `yaw_rate` | Rigidbody Y angular velocity | `[-20, 20]` rad/s |
+| `target_lateral` | local direction to the expected checkpoint | `[-1, 1]` |
+| `target_forward` | local direction to the expected checkpoint | `[-1, 1]` |
 | `progress` | expected checkpoint index / checkpoint count | `[0, 1]` |
 
-The current training scene has 7 rays, so the initial Gymnasium observation shape is `(12,)`. If ray count changes, `HealthResponse.observation_size` and the Python environment validation must change with it.
+The current training scene has 7 road probes and 7 scalar values, so the Gymnasium observation shape is `(14,)`. If the observation layout changes, `HealthResponse.observation_size` and the Python environment validation must change with it.
 
 ## Action contract
 
@@ -85,7 +87,7 @@ Unity clamps all three values at the car boundary. The agent does not control re
 - Add new optional fields with new numbers.
 - Keep `racingrl.v1` until a deliberately incompatible contract needs `v2`.
 - `seed = 0` currently means no seeded scene randomisation. A non-zero seed is reserved for a later reset-randomisation implementation.
-- `terminated` is a true terminal state such as finish/crash; `truncated` is the decision-step limit.
+- `terminated` is a true terminal state such as finish, crash, or stalling; `truncated` is the decision-step limit.
 
 ## Deliberate limits
 

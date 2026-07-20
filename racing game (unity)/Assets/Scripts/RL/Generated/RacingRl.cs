@@ -24,34 +24,35 @@ namespace RacingRl.V1 {
     static RacingRlReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9yYWNpbmdfcmwucHJvdG8SC3JhY2luZ3JsLnYxIooBCgtPYnNlcnZhdGlv",
+            "Cg9yYWNpbmdfcmwucHJvdG8SC3JhY2luZ3JsLnYxIroBCgtPYnNlcnZhdGlv",
             "bhIVCg1yYXlfZGlzdGFuY2VzGAEgAygCEhUKDWZvcndhcmRfc3BlZWQYAiAB",
             "KAISFQoNbGF0ZXJhbF9zcGVlZBgDIAEoAhISCgpzbGlwX2FuZ2xlGAQgASgC",
-            "EhAKCHlhd19yYXRlGAUgASgCEhAKCHByb2dyZXNzGAYgASgCIjsKBkFjdGlv",
-            "bhIQCghzdGVlcmluZxgBIAEoAhIQCgh0aHJvdHRsZRgCIAEoAhINCgVicmFr",
-            "ZRgDIAEoAiIPCg1IZWFsdGhSZXF1ZXN0IlgKDkhlYWx0aFJlc3BvbnNlEhcK",
-            "D3NlcnZpY2VfdmVyc2lvbhgBIAEoCRIYChBvYnNlcnZhdGlvbl9zaXplGAIg",
-            "ASgNEhMKC2FjdGlvbl9zaXplGAMgASgNIhwKDFJlc2V0UmVxdWVzdBIMCgRz",
-            "ZWVkGAEgASgEIp8BCg1SZXNldFJlc3BvbnNlEi0KC29ic2VydmF0aW9uGAEg",
-            "ASgLMhgucmFjaW5ncmwudjEuT2JzZXJ2YXRpb24SMgoEaW5mbxgCIAMoCzIk",
-            "LnJhY2luZ3JsLnYxLlJlc2V0UmVzcG9uc2UuSW5mb0VudHJ5GisKCUluZm9F",
-            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIjIKC1N0ZXBS",
-            "ZXF1ZXN0EiMKBmFjdGlvbhgBIAEoCzITLnJhY2luZ3JsLnYxLkFjdGlvbiLU",
-            "AQoMU3RlcFJlc3BvbnNlEi0KC29ic2VydmF0aW9uGAEgASgLMhgucmFjaW5n",
-            "cmwudjEuT2JzZXJ2YXRpb24SDgoGcmV3YXJkGAIgASgCEhIKCnRlcm1pbmF0",
-            "ZWQYAyABKAgSEQoJdHJ1bmNhdGVkGAQgASgIEjEKBGluZm8YBSADKAsyIy5y",
-            "YWNpbmdybC52MS5TdGVwUmVzcG9uc2UuSW5mb0VudHJ5GisKCUluZm9FbnRy",
-            "eRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBMtMBChFSYWNpbmdF",
-            "bnZpcm9ubWVudBJBCgZIZWFsdGgSGi5yYWNpbmdybC52MS5IZWFsdGhSZXF1",
-            "ZXN0GhsucmFjaW5ncmwudjEuSGVhbHRoUmVzcG9uc2USPgoFUmVzZXQSGS5y",
-            "YWNpbmdybC52MS5SZXNldFJlcXVlc3QaGi5yYWNpbmdybC52MS5SZXNldFJl",
-            "c3BvbnNlEjsKBFN0ZXASGC5yYWNpbmdybC52MS5TdGVwUmVxdWVzdBoZLnJh",
-            "Y2luZ3JsLnYxLlN0ZXBSZXNwb25zZUIOqgILUmFjaW5nUmwuVjFiBnByb3Rv",
-            "Mw=="));
+            "EhAKCHlhd19yYXRlGAUgASgCEhAKCHByb2dyZXNzGAYgASgCEhYKDnRhcmdl",
+            "dF9sYXRlcmFsGAcgASgCEhYKDnRhcmdldF9mb3J3YXJkGAggASgCIjsKBkFj",
+            "dGlvbhIQCghzdGVlcmluZxgBIAEoAhIQCgh0aHJvdHRsZRgCIAEoAhINCgVi",
+            "cmFrZRgDIAEoAiIPCg1IZWFsdGhSZXF1ZXN0IlgKDkhlYWx0aFJlc3BvbnNl",
+            "EhcKD3NlcnZpY2VfdmVyc2lvbhgBIAEoCRIYChBvYnNlcnZhdGlvbl9zaXpl",
+            "GAIgASgNEhMKC2FjdGlvbl9zaXplGAMgASgNIhwKDFJlc2V0UmVxdWVzdBIM",
+            "CgRzZWVkGAEgASgEIp8BCg1SZXNldFJlc3BvbnNlEi0KC29ic2VydmF0aW9u",
+            "GAEgASgLMhgucmFjaW5ncmwudjEuT2JzZXJ2YXRpb24SMgoEaW5mbxgCIAMo",
+            "CzIkLnJhY2luZ3JsLnYxLlJlc2V0UmVzcG9uc2UuSW5mb0VudHJ5GisKCUlu",
+            "Zm9FbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIjIKC1N0",
+            "ZXBSZXF1ZXN0EiMKBmFjdGlvbhgBIAEoCzITLnJhY2luZ3JsLnYxLkFjdGlv",
+            "biLUAQoMU3RlcFJlc3BvbnNlEi0KC29ic2VydmF0aW9uGAEgASgLMhgucmFj",
+            "aW5ncmwudjEuT2JzZXJ2YXRpb24SDgoGcmV3YXJkGAIgASgCEhIKCnRlcm1p",
+            "bmF0ZWQYAyABKAgSEQoJdHJ1bmNhdGVkGAQgASgIEjEKBGluZm8YBSADKAsy",
+            "Iy5yYWNpbmdybC52MS5TdGVwUmVzcG9uc2UuSW5mb0VudHJ5GisKCUluZm9F",
+            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBMtMBChFSYWNp",
+            "bmdFbnZpcm9ubWVudBJBCgZIZWFsdGgSGi5yYWNpbmdybC52MS5IZWFsdGhS",
+            "ZXF1ZXN0GhsucmFjaW5ncmwudjEuSGVhbHRoUmVzcG9uc2USPgoFUmVzZXQS",
+            "GS5yYWNpbmdybC52MS5SZXNldFJlcXVlc3QaGi5yYWNpbmdybC52MS5SZXNl",
+            "dFJlc3BvbnNlEjsKBFN0ZXASGC5yYWNpbmdybC52MS5TdGVwUmVxdWVzdBoZ",
+            "LnJhY2luZ3JsLnYxLlN0ZXBSZXNwb25zZUIOqgILUmFjaW5nUmwuVjFiBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::RacingRl.V1.Observation), global::RacingRl.V1.Observation.Parser, new[]{ "RayDistances", "ForwardSpeed", "LateralSpeed", "SlipAngle", "YawRate", "Progress" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::RacingRl.V1.Observation), global::RacingRl.V1.Observation.Parser, new[]{ "RayDistances", "ForwardSpeed", "LateralSpeed", "SlipAngle", "YawRate", "Progress", "TargetLateral", "TargetForward" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::RacingRl.V1.Action), global::RacingRl.V1.Action.Parser, new[]{ "Steering", "Throttle", "Brake" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::RacingRl.V1.HealthRequest), global::RacingRl.V1.HealthRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::RacingRl.V1.HealthResponse), global::RacingRl.V1.HealthResponse.Parser, new[]{ "ServiceVersion", "ObservationSize", "ActionSize" }, null, null, null, null),
@@ -105,6 +106,8 @@ namespace RacingRl.V1 {
       slipAngle_ = other.slipAngle_;
       yawRate_ = other.yawRate_;
       progress_ = other.progress_;
+      targetLateral_ = other.targetLateral_;
+      targetForward_ = other.targetForward_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -188,6 +191,30 @@ namespace RacingRl.V1 {
       }
     }
 
+    /// <summary>Field number for the "target_lateral" field.</summary>
+    public const int TargetLateralFieldNumber = 7;
+    private float targetLateral_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float TargetLateral {
+      get { return targetLateral_; }
+      set {
+        targetLateral_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "target_forward" field.</summary>
+    public const int TargetForwardFieldNumber = 8;
+    private float targetForward_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float TargetForward {
+      get { return targetForward_; }
+      set {
+        targetForward_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -209,6 +236,8 @@ namespace RacingRl.V1 {
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(SlipAngle, other.SlipAngle)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(YawRate, other.YawRate)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Progress, other.Progress)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(TargetLateral, other.TargetLateral)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(TargetForward, other.TargetForward)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -222,6 +251,8 @@ namespace RacingRl.V1 {
       if (SlipAngle != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(SlipAngle);
       if (YawRate != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(YawRate);
       if (Progress != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Progress);
+      if (TargetLateral != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(TargetLateral);
+      if (TargetForward != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(TargetForward);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -261,6 +292,14 @@ namespace RacingRl.V1 {
         output.WriteRawTag(53);
         output.WriteFloat(Progress);
       }
+      if (TargetLateral != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(TargetLateral);
+      }
+      if (TargetForward != 0F) {
+        output.WriteRawTag(69);
+        output.WriteFloat(TargetForward);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -292,6 +331,14 @@ namespace RacingRl.V1 {
         output.WriteRawTag(53);
         output.WriteFloat(Progress);
       }
+      if (TargetLateral != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(TargetLateral);
+      }
+      if (TargetForward != 0F) {
+        output.WriteRawTag(69);
+        output.WriteFloat(TargetForward);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -316,6 +363,12 @@ namespace RacingRl.V1 {
         size += 1 + 4;
       }
       if (Progress != 0F) {
+        size += 1 + 4;
+      }
+      if (TargetLateral != 0F) {
+        size += 1 + 4;
+      }
+      if (TargetForward != 0F) {
         size += 1 + 4;
       }
       if (_unknownFields != null) {
@@ -345,6 +398,12 @@ namespace RacingRl.V1 {
       }
       if (other.Progress != 0F) {
         Progress = other.Progress;
+      }
+      if (other.TargetLateral != 0F) {
+        TargetLateral = other.TargetLateral;
+      }
+      if (other.TargetForward != 0F) {
+        TargetForward = other.TargetForward;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -386,6 +445,14 @@ namespace RacingRl.V1 {
             Progress = input.ReadFloat();
             break;
           }
+          case 61: {
+            TargetLateral = input.ReadFloat();
+            break;
+          }
+          case 69: {
+            TargetForward = input.ReadFloat();
+            break;
+          }
         }
       }
     #endif
@@ -424,6 +491,14 @@ namespace RacingRl.V1 {
           }
           case 53: {
             Progress = input.ReadFloat();
+            break;
+          }
+          case 61: {
+            TargetLateral = input.ReadFloat();
+            break;
+          }
+          case 69: {
+            TargetForward = input.ReadFloat();
             break;
           }
         }

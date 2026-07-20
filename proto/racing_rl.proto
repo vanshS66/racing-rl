@@ -18,6 +18,8 @@ message Observation {
   float slip_angle = 4;
   float yaw_rate = 5;
   float progress = 6;
+  float target_lateral = 7;
+  float target_forward = 8;
 }
 
 message Action {

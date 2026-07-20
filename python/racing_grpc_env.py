@@ -19,6 +19,7 @@ class RacingGrpcEnv(gym.Env):
 
     def __init__(self, address="127.0.0.1:50051", timeout_seconds=5):
         self.timeout_seconds = timeout_seconds
+        self.last_rpc_seconds = 0.0
         self.channel = grpc.insecure_channel(address)
         self.stub = racing_rl_pb2_grpc.RacingEnvironmentStub(self.channel)
 
@@ -32,14 +33,14 @@ class RacingGrpcEnv(gym.Env):
         if health.action_size != 3:
             self.close()
             raise RuntimeError("Unity reported an unsupported action size: " + str(health.action_size))
-        if health.observation_size < 5:
+        if health.observation_size < 7:
             self.close()
             raise RuntimeError("Unity reported an invalid observation size: " + str(health.observation_size))
 
         self.service_version = health.service_version
-        ray_count = health.observation_size - 5
-        observation_low = np.array([0.0] * ray_count + [-50.0, -50.0, -np.pi, -20.0, 0.0], dtype=np.float32)
-        observation_high = np.array([1.0] * ray_count + [50.0, 50.0, np.pi, 20.0, 1.0], dtype=np.float32)
+        ray_count = health.observation_size - 7
+        observation_low = np.array([0.0] * ray_count + [-50.0, -50.0, -np.pi, -20.0, -1.0, -1.0, 0.0], dtype=np.float32)
+        observation_high = np.array([1.0] * ray_count + [50.0, 50.0, np.pi, 20.0, 1.0, 1.0, 1.0], dtype=np.float32)
         self.observation_space = gym.spaces.Box(observation_low, observation_high, dtype=np.float32)
         self.action_space = gym.spaces.Box(
             low=np.array([-1.0, 0.0, 0.0], dtype=np.float32),
@@ -71,7 +72,7 @@ class RacingGrpcEnv(gym.Env):
         started_at = perf_counter()
         response = self.stub.Step(request, timeout=self.timeout_seconds)
         info = dict(response.info)
-        info["rpc_seconds"] = perf_counter() - started_at
+        self.last_rpc_seconds = perf_counter() - started_at
         return (
             self._observation_from_proto(response.observation),
             float(response.reward),
@@ -93,6 +94,8 @@ class RacingGrpcEnv(gym.Env):
                 observation.lateral_speed,
                 observation.slip_angle,
                 observation.yaw_rate,
+                observation.target_lateral,
+                observation.target_forward,
                 observation.progress,
             ],
             dtype=np.float32,
