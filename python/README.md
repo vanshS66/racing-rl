@@ -16,6 +16,8 @@ py .\python\train_ppo.py --timesteps 2048 --run-name ppo_check
 
 The baseline uses one `DummyVecEnv` because one Unity process serves one serialized car. Its model and TensorBoard files are saved under `runs/<run-name>/`.
 
+PPO controls steering in `[-1, 1]`, throttle control in `[-1, 1]`, and brake in `[0, 1]`. The environment maps throttle control to Unity's `[0, 1]` throttle range, so a zero-centered PPO policy starts with 50% throttle and no brake.
+
 ## Evaluate a saved model
 
 Keep Unity running, then evaluate the final model with deterministic actions:

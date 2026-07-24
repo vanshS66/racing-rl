@@ -20,6 +20,7 @@ class BridgeMetricsCallback(BaseCallback):
         observation = self.locals["new_obs"][0]
         action = self.locals["actions"][0]
         bounded_action = np.clip(action, self.training_env.action_space.low, self.training_env.action_space.high)
+        throttle = (bounded_action[1] + 1.0) * 0.5
 
         self.logger.record_mean("bridge/forward_speed", float(observation[-7]))
         self.logger.record_mean("bridge/lateral_speed", float(observation[-6]))
@@ -29,7 +30,7 @@ class BridgeMetricsCallback(BaseCallback):
         self.logger.record_mean("bridge/target_forward", float(observation[-2]))
         self.logger.record_mean("bridge/rpc_seconds", float(self.training_env.get_attr("last_rpc_seconds")[0]))
         self.logger.record_mean("bridge/steering", float(bounded_action[0]))
-        self.logger.record_mean("bridge/throttle", float(bounded_action[1]))
+        self.logger.record_mean("bridge/throttle", float(throttle))
         self.logger.record_mean("bridge/brake", float(bounded_action[2]))
         self.logger.record("bridge/physics_ticks_per_rpc", 1)
         return True

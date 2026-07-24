@@ -43,7 +43,7 @@ class RacingGrpcEnv(gym.Env):
         observation_high = np.array([1.0] * ray_count + [50.0, 50.0, np.pi, 20.0, 1.0, 1.0, 1.0], dtype=np.float32)
         self.observation_space = gym.spaces.Box(observation_low, observation_high, dtype=np.float32)
         self.action_space = gym.spaces.Box(
-            low=np.array([-1.0, 0.0, 0.0], dtype=np.float32),
+            low=np.array([-1.0, -1.0, 0.0], dtype=np.float32),
             high=np.array([1.0, 1.0, 1.0], dtype=np.float32),
             dtype=np.float32,
         )
@@ -65,7 +65,7 @@ class RacingGrpcEnv(gym.Env):
         request = racing_rl_pb2.StepRequest(
             action=racing_rl_pb2.Action(
                 steering=float(action[0]),
-                throttle=float(action[1]),
+                throttle=float((action[1] + 1.0) * 0.5),
                 brake=float(action[2]),
             )
         )
