@@ -1973,8 +1973,19 @@ MonoBehaviour:
   - localOrigin: {x: 1, y: 2, z: 0.6}
   - localOrigin: {x: 2.25, y: 2, z: 0.6}
   - localOrigin: {x: 3.5, y: 2, z: 0.6}
+  - localOrigin: {x: -3.5, y: 2, z: 5}
+  - localOrigin: {x: -1.75, y: 2, z: 5}
+  - localOrigin: {x: 0, y: 2, z: 5}
+  - localOrigin: {x: 1.75, y: 2, z: 5}
+  - localOrigin: {x: 3.5, y: 2, z: 5}
+  - localOrigin: {x: -3.5, y: 2, z: 10}
+  - localOrigin: {x: -1.75, y: 2, z: 10}
+  - localOrigin: {x: 0, y: 2, z: 10}
+  - localOrigin: {x: 1.75, y: 2, z: 10}
+  - localOrigin: {x: 3.5, y: 2, z: 10}
   rayLength: 3
-  maxDecisionSteps: 1000
+  centerRoadProbeIndex: 3
+  maxDecisionSteps: 1500
   minimumWorldY: -5
   maximumUprightAngle: 75
   stalledSpeedThreshold: 0.5

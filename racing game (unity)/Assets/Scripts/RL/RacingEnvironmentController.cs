@@ -63,11 +63,22 @@ public sealed class RacingEnvironmentController : MonoBehaviour
         new RaySensor { localOrigin = new Vector3(1f, 2f, 0.6f) },
         new RaySensor { localOrigin = new Vector3(2.25f, 2f, 0.6f) },
         new RaySensor { localOrigin = new Vector3(3.5f, 2f, 0.6f) },
+        new RaySensor { localOrigin = new Vector3(-3.5f, 2f, 5f) },
+        new RaySensor { localOrigin = new Vector3(-1.75f, 2f, 5f) },
+        new RaySensor { localOrigin = new Vector3(0f, 2f, 5f) },
+        new RaySensor { localOrigin = new Vector3(1.75f, 2f, 5f) },
+        new RaySensor { localOrigin = new Vector3(3.5f, 2f, 5f) },
+        new RaySensor { localOrigin = new Vector3(-3.5f, 2f, 10f) },
+        new RaySensor { localOrigin = new Vector3(-1.75f, 2f, 10f) },
+        new RaySensor { localOrigin = new Vector3(0f, 2f, 10f) },
+        new RaySensor { localOrigin = new Vector3(1.75f, 2f, 10f) },
+        new RaySensor { localOrigin = new Vector3(3.5f, 2f, 10f) },
     };
     [SerializeField, Min(0.1f)] private float rayLength = 3f;
+    [SerializeField, Min(0)] private int centerRoadProbeIndex = 3;
 
     [Header("Episode")]
-    [SerializeField, Min(1)] private int maxDecisionSteps = 1_000;
+    [SerializeField, Min(1)] private int maxDecisionSteps = 1_500;
     [SerializeField] private float minimumWorldY = -5f;
     [SerializeField, Range(1f, 180f)] private float maximumUprightAngle = 75f;
     [SerializeField, Min(0f)] private float stalledSpeedThreshold = 0.5f;
@@ -252,10 +263,10 @@ public sealed class RacingEnvironmentController : MonoBehaviour
 
     private bool IsCenterRoadProbeHit()
     {
-        if (RayCount == 0)
+        if (centerRoadProbeIndex < 0 || centerRoadProbeIndex >= RayCount)
             return true;
 
-        RaySensor sensor = raySensors[RayCount / 2];
+        RaySensor sensor = raySensors[centerRoadProbeIndex];
         Vector3 origin = car.transform.TransformPoint(sensor.localOrigin);
         return Physics.Raycast(origin, -car.transform.up, rayLength, roadSensorMask, QueryTriggerInteraction.Ignore);
     }
