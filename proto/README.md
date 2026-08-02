@@ -1,77 +1,60 @@
 # Racing RL protocol
 
-`racing_rl.proto` is the source of truth for the Unity/Python boundary. Generated C# and Python files are outputs and must not be edited by hand.
+`racing_rl.proto` is the Unity/Python contract. Generated C# and Python files come from this file and should not be edited by hand.
 
-## Python generation
-
-Install the pinned generator/runtime from the workspace root:
+## Generate Python bindings
 
 ```powershell
 py -m pip install -r python/requirements.txt
-```
-
-Generate Python bindings:
-
-```powershell
 py -m grpc_tools.protoc --proto_path=proto --python_out=python/generated --grpc_python_out=python/generated proto/racing_rl.proto
 ```
 
-## Unity C# generation
+## Generate Unity bindings
 
-The Unity spike uses the pinned `Grpc.Tools` package declared in `tools/RacingRlCodegen`. Restore it once, then regenerate the C# files after changing the schema:
+The Unity spike uses the pinned `Grpc.Tools` package in `tools/RacingRlCodegen`.
 
 ```powershell
 dotnet restore tools/RacingRlCodegen/RacingRlCodegen.csproj
 .\tools\generate_unity_proto.ps1
 ```
 
-The generated files belong in `racing game (unity)/Assets/Scripts/RL/Generated`. The native runtime is deliberately limited to the Windows x64 Editor/Standalone spike; see `Assets/Plugins/Grpc/README.md`.
+Generated C# files go in `racing game (unity)/Assets/Scripts/RL/Generated`.
 
-Check the generated imports:
+## RPCs
 
-```powershell
-py -c "import sys; sys.path.insert(0, 'python/generated'); import racing_rl_pb2; import racing_rl_pb2_grpc; print(racing_rl_pb2.DESCRIPTOR.package)"
-```
+| RPC | Purpose |
+| --- | --- |
+| `Health` | Reports protocol version, observation size, and action size. |
+| `Reset` | Resets the car and returns the first observation. |
+| `Step` | Applies one action, advances one Unity physics tick, then returns the result. |
 
-## Step order
+`Reset` and `Step` are unary calls. One Python action maps to one completed simulation transition.
 
-1. Python sends `ResetRequest`.
-2. Unity resets the car and returns the first `Observation`.
-3. Python sends one `Action` in `StepRequest`.
-4. Unity applies that action, advances one fixed-physics tick, and then samples the result.
-5. Unity returns the post-step observation, reward, terminal state, and info.
+## Observation
 
-`Reset` and `Step` are unary calls on purpose. They make one action map to one completed simulation transition. Streaming is not needed until profiling shows call overhead matters.
-
-With Unity in Play mode, use this transport smoke test before Gymnasium exists:
-
-```powershell
-py .\python\health_check.py
-py .\python\bridge_smoke_test.py
-```
-
-## Observation order
-
-`Observation` is flattened for Gymnasium as:
+Gymnasium receives the flattened observation in this order:
 
 ```text
-[ray_distances..., forward_speed, lateral_speed, slip_angle, yaw_rate, target_lateral, target_forward, progress]
+[ray_distances..., forward_speed, lateral_speed, slip_angle, yaw_rate,
+ target_lateral, target_forward, progress]
 ```
 
-| Field | Unity source | Range / unit |
+| Field | Range | Notes |
 | --- | --- | --- |
-| `ray_distances` | `RacingEnvironmentController.BuildObservation` | 7 road-presence probes; `1` is road below the probe and `0` is no road |
-| `forward_speed` | local Rigidbody Z velocity | `[-50, 50]` m/s |
-| `lateral_speed` | local Rigidbody X velocity | `[-50, 50]` m/s |
-| `slip_angle` | `atan2(localVelocity.x, localVelocity.z)` | `[-pi, pi]` radians |
-| `yaw_rate` | Rigidbody Y angular velocity | `[-20, 20]` rad/s |
-| `target_lateral` | local direction to the expected checkpoint | `[-1, 1]` |
-| `target_forward` | local direction to the expected checkpoint | `[-1, 1]` |
-| `progress` | expected checkpoint index / checkpoint count | `[0, 1]` |
+| `ray_distances` | `[0, 1]` | 17 downward `RoadSensor` probes. `1` means road was found below the probe. |
+| `forward_speed` | `[-50, 50]` | Local Rigidbody Z velocity in m/s. |
+| `lateral_speed` | `[-50, 50]` | Local Rigidbody X velocity in m/s. |
+| `slip_angle` | `[-pi, pi]` | Calculated from local lateral and forward velocity. |
+| `yaw_rate` | `[-20, 20]` | Rigidbody Y angular velocity. |
+| `target_lateral` | `[-1, 1]` | Local normalized direction to the expected checkpoint. |
+| `target_forward` | `[-1, 1]` | Local normalized direction to the expected checkpoint. |
+| `progress` | `[0, 1]` | Expected checkpoint index divided by checkpoint count. |
 
-The current training scene has 7 road probes and 7 scalar values, so the Gymnasium observation shape is `(14,)`. If the observation layout changes, `HealthResponse.observation_size` and the Python environment validation must change with it.
+The training scene currently returns 24 values: 17 probes and 7 scalar values. `HealthResponse.observation_size` is the authoritative count.
 
-## Action contract
+## Action
+
+The wire contract always sends Unity these values:
 
 | Field | Range |
 | --- | --- |
@@ -79,16 +62,22 @@ The current training scene has 7 road probes and 7 scalar values, so the Gymnasi
 | `throttle` | `[0, 1]` |
 | `brake` | `[0, 1]` |
 
-Unity clamps all three values at the car boundary. The agent does not control reverse or handbrake in v1.
+Unity clamps the action at the car boundary. Reverse and handbrake are not part of the v1 contract.
 
-## Versioning rules
+## Episode result
 
-- Never renumber or reuse an existing Protobuf field number.
-- Add new optional fields with new numbers.
-- Keep `racingrl.v1` until a deliberately incompatible contract needs `v2`.
-- `seed = 0` currently means no seeded scene randomisation. A non-zero seed is reserved for a later reset-randomisation implementation.
-- `terminated` is a true terminal state such as finish, crash, or stalling; `truncated` is the decision-step limit.
+`StepResponse` includes reward plus Gymnasium-style terminal state:
 
-## Deliberate limits
+- `terminated`: lap complete, below world, rollover, off-road, or stalled.
+- `truncated`: decision-step limit reached.
 
-This protocol covers one car and one serialized caller. It has no agent IDs, generic spaces, streaming, reconnection IDs, vectorized environments, image observations, or inference support. Those are production concerns that Schola generalizes, but they would obscure the core bridge at this stage.
+## Versioning
+
+- Never reuse or renumber a field number.
+- Add optional fields with new numbers.
+- Keep `racingrl.v1` until there is a deliberate incompatible protocol change.
+- `seed = 0` currently means the scene's normal reset. Seeded scene randomization is not implemented yet.
+
+## Scope
+
+This protocol is for one serialized caller and one car. It intentionally has no agent IDs, generic spaces, streaming, reconnection IDs, vectorized environments, image observations, or inference support.
