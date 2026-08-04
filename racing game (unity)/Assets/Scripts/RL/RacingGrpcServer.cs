@@ -219,6 +219,8 @@ public sealed class RacingGrpcService : RacingEnvironment.RacingEnvironmentBase
             LateralSpeed = source.lateralSpeed,
             SlipAngle = source.slipAngle,
             YawRate = source.yawRate,
+            TargetLateral = source.targetLateral,
+            TargetForward = source.targetForward,
             Progress = source.progress,
         };
         observation.RayDistances.Add(source.rayDistances);

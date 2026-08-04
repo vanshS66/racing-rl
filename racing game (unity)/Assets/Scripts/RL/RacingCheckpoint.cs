@@ -6,6 +6,13 @@ public sealed class RacingCheckpoint : MonoBehaviour
     [SerializeField] private RacingEnvironmentController environment;
     [SerializeField, Min(0)] private int checkpointIndex;
 
+    public int CheckpointIndex => checkpointIndex;
+
+    public bool BelongsTo(RacingEnvironmentController candidate)
+    {
+        return environment == candidate;
+    }
+
     private void Reset()
     {
         Collider triggerCollider = GetComponent<Collider>();
