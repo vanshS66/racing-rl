@@ -4,7 +4,7 @@ An experimental Unity racing environment connected to Python reinforcement learn
 
 The project uses a driving controller from one of my previous Unity projects as the simulator. Python controls the car with Stable-Baselines3 PPO, while Unity is responsible for physics, checkpoints, rewards, and episode resets.
 
-> **placeholder** a short clip of the trained car driving in `main_training`, with the road-probe gizmos visible for one moment before switching to the normal showcase view.
+> **placeholder** a short clip of the trained car driving in `main_training`, with the road-probe gizmos visible
 
 ## Why this exists
 
@@ -38,7 +38,7 @@ flowchart LR
 
 > **placeholder** top-down Scene-view screenshot labeling the near, 5 m, and 10 m probe rows over the road mesh.
 
-> **placeholder** charts showing checkpoint progress, road-probe activity, episode reward, and RPC duration from a training run.
+> **placeholder** charts showing checkpoint progress, road-probe activity, episode reward from a training run.
 
 ## Quick start
 
